@@ -1,0 +1,132 @@
+<!-- 
+	为什么要做声明?不做这个声明有什么影响?
+	不作声明也可以显示,但是每个浏览器解析不太一样(有不同的编译模式).
+	所以做这个声明是为了统一的标准规范,符合w3c的规范
+-->
+<!doctype html>
+<html>
+	<head>
+		<!--声明当前页面的编码集：charset=gbk,gb2312(中文编码)，utf-8(国际编码)-->
+		<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+		<!--声明当前页面的三要素  标题  关键字  页面描述-->
+		<title></title>
+		<meta name="keywords" content="关键词,关键词">
+		<meta name="description" content="">
+
+		<!--js/css-->
+		<style>
+		body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+		ol,ul{margin:0;padding:0;list-style:none;}
+		a{text-decoration:none;}
+		img{border:none;}
+		body{font:12px "微软雅黑";color:#666;}
+		#wrap{
+			position: relative;
+			width: 1000px;
+			height: 500px;
+			margin: 0 auto;
+			border: 1px solid;
+		}
+	/* ---------  轮播区域  -------- */
+		#wrap .banner{
+			overflow: hidden;
+			height: 100%;
+		}
+		.banner i{
+			position: relative;
+			float: left;
+			width: 100px;
+			background-repeat:no-repeat;
+		}
+	/* ---------  左右按钮  --------- */
+		#wrap button{
+			position: absolute;
+			top: 50%;
+			width: 25px;
+			height: 50px;
+			background-color: rgba(0,0,0,.2);
+			border: 0;	
+			padding: 0;
+			transition: all .5s ease;
+			color: #fff;
+			cursor: pointer;
+		}
+		#wrap button.next{
+			right: 0;
+		}
+		#wrap button:hover{
+			background-color: rgba(0,0,0,.8);
+		}
+		
+		</style>
+	</head>
+<body>
+<div id="wrap">
+	<div class="banner"></div>
+	<button class="prev">&lt;</button>
+	<button class="next">&gt;</button>
+</div>
+<script src="js/animationframe.js"></script>
+<script>
+	var oWrap = document.getElementById("wrap");
+	var oI = oWrap.getElementsByTagName("i");
+	var oBanner = oWrap.getElementsByClassName("banner")[0];
+	var aBtn = document.getElementsByTagName("button");
+	var bbtn = oWrap.getElementsByTagName("span");
+	var arr = ["images/1.jpg","images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg"];
+	var index = 0;
+	banner()
+	function banner(){
+		var grid = {
+			Row : 10,
+			Column : 10
+		};
+		for(var i = 0;i < grid.Row;i++){
+			for(var j = 0;j < grid.Column;j++){
+				var thatI = document.createElement("i");
+				thatI.style.width = oBanner.offsetWidth / grid.Column + 'px';
+				thatI.style.height = oBanner.offsetHeight / grid.Row + 'px';
+				thatI.style.backgroundImage = "url("+ arr[index] +")";
+				thatI.style.backgroundPositionX = -j * (oBanner.offsetWidth / grid.Column) + "px";
+				thatI.style.backgroundPositionY = -i * (oBanner.offsetHeight / grid.Row) + "px";
+				thatI.style.backgroundSize = oBanner.offsetWidth+'px '+ oBanner.offsetHeight+"px";
+				oBanner.appendChild(thatI);
+			}
+		}
+	}
+
+	aBtn[0].onclick = function(){
+		index--;
+		if(index < 0){
+			index = arr.length-1;
+		}
+		move()
+	}
+	aBtn[1].onclick = function(){
+		index++;
+		if(index > arr.length-1){
+			index = 0;
+		}
+		move()
+	}
+
+	function move(){
+		for(var i=0;i<oI.length;i++){
+			Move(oI[i],{
+				left : parseInt(Math.random() * 2 * oBanner.offsetWidth - oBanner.offsetWidth),
+				top : parseInt(Math.random() * 2 * oBanner.offsetHeight - oBanner.offsetHeight),
+				opacity : 0
+			},1500,function(){
+				this.style.backgroundImage = "url("+ arr[index] +")";
+				Move(this,{
+					left : 0,
+					top : 0,
+					opacity : 1	
+				},1000)
+			})
+		}
+	}
+	
+</script>
+</body>
+</html>
